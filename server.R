@@ -6,12 +6,33 @@
 #
 
 library(shiny)
+
+#load the rdataretriever package
 library(rdataretriever)
 
+#load dataset options
+birdSurvey = rdataretriever::fetch('breed-bird-survey') #from Coyle et. al.
+
+
+
 shinyServer(function(input, output) {
-  
-  output$text1 <- renderText({ 
-    "You have selected this"
+  output$graph <- renderPlot({
+    
+    #check to see what the graph is
+    if(input$selectData == "Bird Survey" && input$graphType == "Histogram"){
+      
+      #Got stuff working and then it stopped working
+      #hist(bird_size$bird_size_species[,2])
+      #hist(birdSurvey)
+      
+      #just to show a histogram will appear with the right options chosen
+      hist(AirPassengers)
+      
+      
+      
+      
+    }
+    
   })
   
 }

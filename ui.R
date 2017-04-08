@@ -15,12 +15,12 @@ shinyUI(fluidPage(
     sidebarPanel(
       helpText("Create informative graphs with datasets from the EcoData Retriever."),
       
-      selectInput("selectData",
+      selectInput(inputId = "selectData",
                   label="Choose the dataset to graph",
-                  choices = c("Portal", "Vertnet-Fishes")
+                  choices = c("Bird Survey", "Vertnet-Fishes")
                   ),
       
-      radioButtons("graphType",
+      radioButtons(inputId = "graphType",
                    label = "Select the desired graph",
                    choices = c("Histogram", "Scatter Plot", "Box-Whisker")
                    )
@@ -28,6 +28,6 @@ shinyUI(fluidPage(
     
     #mainpage goes here
     mainPanel(
-      textOutput("text1"))
+      plotOutput("graph"))
   )
 ))
