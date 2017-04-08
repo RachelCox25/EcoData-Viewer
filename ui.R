@@ -9,18 +9,25 @@ library(shiny)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
-  titlePanel("Basic widgets"),
+  titlePanel("EcoData Retriever Graphs"),
   
-  fluidRow(
-    column(3,
-           selectInput("select", label = h3("Select Your Dataset"), 
-                       choices = list("Dataset 1" = 1, "Dataset 2" = 2,
-                                      "Dataset 3" = 3), selected = 1)),
-    column(3,
-           radioButtons("radio", label = h3("Graphs"),
-                        choices = list("Histogram" = 1, "Scatter Plot" = 2,
-                                       "Box-Whisker" = 3),selected = 1))
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Create informative graphs with datasets from the EcoData Retriever."),
+      
+      selectInput("selectData",
+                  label="Choose the dataset to graph",
+                  choices = c("Portal", "Vertnet-Fishes")
+                  ),
+      
+      radioButtons("graphType",
+                   label = "Select the desired graph",
+                   choices = c("Histogram", "Scatter Plot", "Box-Whisker")
+                   )
+    ),
+    
+    #mainpage goes here
+    mainPanel(
+      textOutput("text1"))
   )
-  
-  
 ))
