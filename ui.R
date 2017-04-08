@@ -6,10 +6,11 @@
 #
 
 library(shiny)
+library(rdataretriever)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
-  titlePanel("EcoData Retriever Graphs"),
+  titlePanel("EcoData Viewer"),
   
   sidebarLayout(
     sidebarPanel(
