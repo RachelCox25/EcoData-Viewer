@@ -9,6 +9,8 @@ library(shiny)
 
 #load the rdataretriever package
 library(rdataretriever)
+library(readr)
+library(ggplot2)
 
 #load dataset options, this isn't working
 #birdSurvey = rdataretriever::fetch('breed-bird-survey') #from Coyle et. al.
