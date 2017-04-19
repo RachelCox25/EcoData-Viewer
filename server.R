@@ -113,11 +113,14 @@ shinyServer(function(input, output) {
           plot(portal$main[[choice1]], portal$main[[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
         } else {
           # have them select two variables from the list
-          
         }
         
       } else if (input$graphType == "Box-Whisker") {
-        # 
+        if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
+          boxplot(portal$main[[input$boxVariableOptions1]], portal$main[[input$boxVariableOptions2]])
+        } else {
+          # Have them select one numeric and one factor variable
+        }
       }
       
     }
