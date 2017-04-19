@@ -138,7 +138,7 @@ shinyServer(function(input, output) {
         if (length(input$histogramVariableOptions) == 1) {
           #hist(nameToData[[input$selectData]][[input$histogramVariableOptions]], col = "lightblue" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
           #hist(portal$main[[input$histogramVariableOptions]], col = "slategray" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
-          ggplot(nameToData[[input$selectData]], aes_string(input$histogramVariableOptions)) + geom_histogram(col="wheat") + xlab(input$histogramVariableOptions)
+          ggplot(nameToData[[input$selectData]], aes_string(input$histogramVariableOptions)) + geom_histogram(col="wheat") + xlab(input$histogramVariableOptions) + ggtitle(paste("Histogram of", input$histogramVariableOptions))
         } else {
           # have them select one variable from the list
         }
@@ -149,7 +149,9 @@ shinyServer(function(input, output) {
         if (length(input$scatplotVariableOptions) == 2) {
           choice1 <- input$scatplotVariableOptions[1]
           choice2 <- input$scatplotVariableOptions[2]
+
           ggplot(nameToData[[input$selectData]], aes_string(choice1,choice2)) + geom_point(colour = graphColors[[input$selectData]]) + xlab(choice1) + ylab(choice2)
+
         } else {
           # have them select two variables from the list
         }
