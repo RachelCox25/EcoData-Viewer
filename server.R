@@ -21,7 +21,7 @@ library(dplyr)
 
 occupancyData <- read_tsv("Occupancy_Data.txt")
 locationData <- read_tsv("Location_Data.txt")
-
+portal <- rdataretriever::fetch("portal")
 #portal <- rdataretriever::fetch("portal")
 
 shinyServer(function(input, output) {
@@ -29,6 +29,20 @@ shinyServer(function(input, output) {
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded
   output$ui <- renderUI({
     if(input$selectData == "Portal"){
+      # First fetch the dataset
+      
+      # Now, just for easier coding later, get the list of numerics and factors from portal
+      numerics <- c()
+      factors <- c()
+      
+      for (variable in lapply(portal$main, class)) {
+        # find out which variable type it is
+        if (variable == "integer") {
+          # add it to the numerics list
+        } else if (variable == "factor") {
+          # add it to the factor list
+        }
+      }
       switch(input$graphType,
              "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", 
                                               label = "Select ONE numeric variable to graph",
