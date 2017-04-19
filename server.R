@@ -5,6 +5,11 @@
 # 3. ggplot wasn't working for variable names for graphing (i.e. choice1 and choice2 instead of yr and dy)
 
 
+# IDEAS FOR IMPROVEMENT
+#   - Have an option for the scatterplot graph for them to select with variable they want to differentiate the colors on
+#         ... So we would show a checkbox list of the factor values, (default to having nothing checked) and if they picked one, do: geom_point(aes(colour = factor(THE-VARIABLE-THEY-SELECTED)))
+        # ... if they don't pick one, then we stick with the main color value
+
 # This is the server logic for a Shiny web application.
 # You can find out more about building applications with Shiny here:
 #
@@ -47,9 +52,9 @@ graphColors <- list()
 # set the specific color values for each dataset
   # the key needs to be whatever will be in input$selectData
   # the value needs to be a string color name
-graphColors["Portal"] <- "mintcream"
+graphColors["Portal"] <- "darkseagreen2"
 graphColors["Salmon Trends"] <- "salmon"
-graphColors["Abalone Age Prediction"] <- "firebrick4"
+graphColors["Abalone Age Prediction"] <- "lightblue"
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
 
@@ -124,11 +129,9 @@ shinyServer(function(input, output) {
       }else if(input$graphType == "Scatter Plot"){
         ggplot(locationData, aes(NumSpecies,NDVI)) + geom_point(aes(colour = factor(PredominantSpeciesType), size = Elevation)) + xlab("Total Number of Species")
       }
-   
-  #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded 
-      #portal dataset graphing stuff
     }
-    
+    #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded 
+    #portal dataset graphing stuff
     else {
       # use ggplot hist instead of just hist
       if (input$graphType == "Histogram" ) {
@@ -146,7 +149,7 @@ shinyServer(function(input, output) {
         if (length(input$scatplotVariableOptions) == 2) {
           choice1 <- input$scatplotVariableOptions[1]
           choice2 <- input$scatplotVariableOptions[2]
-          ggplot(nameToData[[input$selectData]], aes_string(choice1,choice2)) + geom_point()
+          ggplot(nameToData[[input$selectData]], aes_string(choice1,choice2)) + geom_point(colour = graphColors[[input$selectData]]) + xlab(choice1) + ylab(choice2)
         } else {
           # have them select two variables from the list
         }
