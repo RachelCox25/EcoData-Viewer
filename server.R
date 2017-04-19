@@ -46,15 +46,18 @@ shinyServer(function(input, output) {
       switch(input$graphType,
              "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", 
                                               label = "Select ONE numeric variable to graph",
-                                              choices = numerics
+                                              choices = numerics, 
+                                              selected = numerics[1]
              ),
              "Scatter Plot" = checkboxGroupInput(inputId = "scatplotVariableOptions", 
                                                  label = "Select TWO numeric variables to graph",
-                                                 choices = numerics
+                                                 choices = numerics,
+                                                 selected = c(numerics[1], numerics[2])
              ),
              "Box-Whisker" = checkboxGroupInput(inputId = "boxVariableOptions1", 
                                                 label = "Select ONE numeric variable to graph", 
-                                                choices = numerics
+                                                choices = numerics,
+                                                selected = numerics[1]
              )
       )
     }
@@ -74,7 +77,7 @@ shinyServer(function(input, output) {
       count <- count + 1
     }
     if(input$selectData != "Bird Survey" && input$graphType == "Box-Whisker"){
-      checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = factors)
+      checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = factors, selected=factors[1])
     }
   })
   
@@ -94,11 +97,23 @@ shinyServer(function(input, output) {
     }else{
       #just get a different graph to show up if not bird survey
       if (input$graphType == "Histogram" ) {
-        hist(AirPassengers)
-        # hist(USER_SelectedChoice)
+        if (length(input$histogramVariableOptions) == 1) {
+          hist(portal$main[[input$histogramVariableOptions]], main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+        } else {
+          # have them select one variable from the list
+        }
       } else if (input$graphType == "Scatter Plot") {
         # run ggplot on portal$main, with aes set to the variable names defined in their selected choices
         # ggplot(portal$main, aes(Choice1,Choice2)) <---- still not sure how to get these choices 
+        if (length(input$scatplotVariableOptions) == 2) {
+          choice1 <- input$scatplotVariableOptions[1]
+          choice2 <- input$scatplotVariableOptions[2]
+          ggplot(portal$main, aes(choice1,choice2))
+        } else {
+          # have them select two variables from the list
+          
+        }
+        
       } else if (input$graphType == "Box-Whisker") {
         # 
       }
