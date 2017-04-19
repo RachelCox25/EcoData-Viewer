@@ -23,7 +23,7 @@ occupancyData <- read_tsv("Occupancy_Data.txt")
 locationData <- read_tsv("Location_Data.txt")
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
-
+factors <- c() # factors needs to be accessed outside both loops
 
 shinyServer(function(input, output) {
   
@@ -32,28 +32,32 @@ shinyServer(function(input, output) {
     if(input$selectData == "Portal"){
       # Get the list of numerics and factors from portal
       numerics <- c()
-      factors <- c()
       
+      count <- 1
+      colNamesList <- colnames(portal$main)
       for (variable in lapply(portal$main, class)) {
         # find out which variable type it is
         if (variable == "integer") {
           # add it to the numerics list
+          numerics <- c(numerics, colNamesList[count])
         } else if (variable == "factor") {
           # add it to the factor list
+          factors <- c(factors, colNamesList[count]) 
         }
+        count <- count + 1
       }
       switch(input$graphType,
              "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", 
                                               label = "Select ONE numeric variable to graph",
-                                              choices = c(10, 344, 567)
+                                              choices = numerics
              ),
              "Scatter Plot" = checkboxGroupInput(inputId = "scatplotVariableOptions", 
                                                  label = "Select TWO numeric variables to graph",
-                                                 choices = c(10, 344, 567)
+                                                 choices = numerics
              ),
              "Box-Whisker" = checkboxGroupInput(inputId = "boxVariableOptions1", 
                                                 label = "Select ONE numeric variable to graph", 
-                                                choices = c(10, 344, 567)
+                                                choices = numerics
              )
       )
     }
@@ -62,7 +66,7 @@ shinyServer(function(input, output) {
   #Have to have a second render UI to have a second set of check boxes
   output$ui2 <- renderUI({
     if(input$selectData != "Bird Survey" && input$graphType == "Box-Whisker"){
-      checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = c("factor1", "factor2", "factor3"))
+      checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = factors)
     }
   })
   
