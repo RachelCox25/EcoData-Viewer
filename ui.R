@@ -36,8 +36,7 @@ shinyUI(fluidPage(
 
     #mainpage goes here
     mainPanel(
-      plotOutput("graph"),
-      textOutput("error")
+      plotOutput("graph")
       )
   )
 ))

@@ -246,12 +246,5 @@ shinyServer(function(input, output) {
     }
   })
   
-  #just for looks adding an error message for if box-whisker is chosen for bird survey
-  output$error <- renderText({
-    if(input$selectData == "Bird Survey" && input$graphType == "Box-Whisker"){
-      "ERROR: This graph is currently unavailable"
-    }
-  })
-  
 }
 )
