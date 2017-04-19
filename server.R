@@ -1,3 +1,8 @@
+#QUESTIONS TO ASK
+# 1. Can character classes be used like a factor? (i.e. in the box-whisker plots)
+# 2. Is there a ggplot for scatterplot?
+# 3. ggplot wasn't working for variable names for graphing (i.e. choice1 and choice2 instead of yr and dy)
+
 
 # This is the server logic for a Shiny web application.
 # You can find out more about building applications with Shiny here:
