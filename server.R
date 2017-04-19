@@ -62,12 +62,20 @@ shinyServer(function(input, output) {
         
       }else if(input$graphType == "Scatter Plot"){
         ggplot(locationData, aes(NumSpecies,NDVI)) + geom_point(aes(colour = factor(PredominantSpeciesType), size = Elevation)) + xlab("Total Number of Species")
+      
       }
    
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded   
     }else{
       #just get a different graph to show up if not bird survey
       hist(AirPassengers)
+    }
+  })
+  
+  #just for looks adding an error message for if box-whisker is chosen for bird survey
+  output$error <- renderText({
+    if(input$selectData == "Bird Survey" && input$graphType == "Box-Whisker"){
+      "ERROR: This graph is currently unavailable"
     }
   })
   
