@@ -27,7 +27,10 @@ shinyUI(fluidPage(
                    ),
       
       #pops up checkbox based on what the graphType is..right?
-      uiOutput("ui")
+      uiOutput("ui"),
+      
+      #Have to have a second render UI to have a second set of check boxes
+      uiOutput("ui2")
       
     ),
 
@@ -36,33 +39,4 @@ shinyUI(fluidPage(
       plotOutput("graph"))
   )
 ))
-
-
-#DYNAMIC EXAMPLE STUFF
-# fluidPage(
-#   titlePanel("Dynamically generated user interface components"),
-#   fluidRow(
-#     
-#     column(3, wellPanel(
-#       selectInput("input_type", "Input type",
-#                   c("slider", "text", "numeric", "checkbox",
-#                     "checkboxGroup", "radioButtons", "selectInput",
-#                     "selectInput (multi)", "date", "daterange"
-#                   )
-#       )
-#     )),
-#     
-#     column(3, wellPanel(
-#       # This outputs the dynamic UI component
-#       uiOutput("ui")
-#     )),
-#     
-#     column(3,
-#            tags$p("Input type:"),
-#            verbatimTextOutput("input_type_text"),
-#            tags$p("Dynamic input value:"),
-#            verbatimTextOutput("dynamic_value")
-#     )
-#   )
-# )
 
