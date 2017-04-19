@@ -26,10 +26,10 @@ shinyUI(fluidPage(
                    choices = c("Histogram", "Scatter Plot", "Box-Whisker")
                    ),
       
-      #pops up checkbox based on what the graphType is..right?
+      #pops up checkbox based on what the graphType is..right? Yes!
       uiOutput("ui"),
       
-      #Have to have a second render UI to have a second set of check boxes
+      #Have to have a second render UI to have a second set of check boxes (for the box-whisker plot option)
       uiOutput("ui2")
       
     ),

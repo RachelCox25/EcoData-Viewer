@@ -24,15 +24,15 @@ locationData <- read_tsv("Location_Data.txt")
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
 factors <- c() # factors needs to be accessed outside both loops
+# LOOK INTO THE "updateSelectInput(session ...) function maybe 
 
 shinyServer(function(input, output) {
   
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded
   output$ui <- renderUI({
     if(input$selectData == "Portal"){
-      # Get the list of numerics and factors from portal
+      # Establish the list of numerics and factors from the dataset
       numerics <- c()
-      
       count <- 1
       colNamesList <- colnames(portal$main)
       for (variable in lapply(portal$main, class)) {
@@ -46,6 +46,7 @@ shinyServer(function(input, output) {
         }
         count <- count + 1
       }
+      
       switch(input$graphType,
              "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", 
                                               label = "Select ONE numeric variable to graph",
@@ -85,7 +86,16 @@ shinyServer(function(input, output) {
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded   
     }else{
       #just get a different graph to show up if not bird survey
-      hist(AirPassengers)
+      if (input$graphType == "Histogram" ) {
+        hist(AirPassengers)
+        # hist(USER_SelectedChoice)
+      } else if (input$graphType == "Scatter Plot") {
+        # run ggplot on portal$main, with aes set to the variable names defined in their selected choices
+        # ggplot(portal$main, aes(Choice1,Choice2)) <---- still not sure how to get these choices 
+      } else if (input$graphType == "Box-Whisker") {
+        # 
+      }
+      
     }
   })
   
