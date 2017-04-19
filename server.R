@@ -99,7 +99,7 @@ shinyServer(function(input, output) {
       #just get a different graph to show up if not bird survey
       if (input$graphType == "Histogram" ) {
         if (length(input$histogramVariableOptions) == 1) {
-          hist(portal$main[[input$histogramVariableOptions]], main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+          hist(portal$main[[input$histogramVariableOptions]], col = "slategray" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
         } else {
           # have them select one variable from the list
         }
