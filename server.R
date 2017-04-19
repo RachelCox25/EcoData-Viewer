@@ -128,15 +128,46 @@ shinyServer(function(input, output) {
       
       }
    
-  #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded   
-    }else{
-      #just get a different graph to show up if not bird survey
+  #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded 
+      #portal dataset graphing stuff
+    }else if(input$selectData == "Portal"){
+      
+        if (input$graphType == "Histogram" ) {
+          if (length(input$histogramVariableOptions) == 1) {
+            hist(portal$main[[input$histogramVariableOptions]], col = "slategray" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+          } else {
+            # have them select one variable from the list
+          }
+          
+        } else if (input$graphType == "Scatter Plot") {
+          # run ggplot on portal$main, with aes set to the variable names defined in their selected choices
+          # ggplot(portal$main, aes(Choice1,Choice2)) <---- still not sure how to get these choices 
+          if (length(input$scatplotVariableOptions) == 2) {
+            choice1 <- input$scatplotVariableOptions[1]
+            choice2 <- input$scatplotVariableOptions[2]
+            #ggplot(portal$main, aes(choice1,choice2)) + geom_point(shape=1)
+            plot(portal$main[[choice1]], portal$main[[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
+          } else {
+            # have them select two variables from the list
+          }
+          
+        } else if (input$graphType == "Box-Whisker") {
+          if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
+            boxplot(portal$main[[input$boxVariableOptions1]], portal$main[[input$boxVariableOptions2]])
+          } else {
+            # Have them select one numeric and one factor variable
+          }
+        }
+      
+      #Salmon trends graphing stuff
+    }else if(input$selectData == "Salmon Trends"){
       if (input$graphType == "Histogram" ) {
         if (length(input$histogramVariableOptions) == 1) {
-          hist(portal$main[[input$histogramVariableOptions]], col = "slategray" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+          hist(salmonData[[input$histogramVariableOptions]], col = "salmon" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
         } else {
           # have them select one variable from the list
         }
+        
       } else if (input$graphType == "Scatter Plot") {
         # run ggplot on portal$main, with aes set to the variable names defined in their selected choices
         # ggplot(portal$main, aes(Choice1,Choice2)) <---- still not sure how to get these choices 
@@ -144,19 +175,19 @@ shinyServer(function(input, output) {
           choice1 <- input$scatplotVariableOptions[1]
           choice2 <- input$scatplotVariableOptions[2]
           #ggplot(portal$main, aes(choice1,choice2)) + geom_point(shape=1)
-          plot(portal$main[[choice1]], portal$main[[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
+          plot(salmonData[[choice1]], salmonData[[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
         } else {
           # have them select two variables from the list
         }
         
+        #this won't work right now because no factor variables
       } else if (input$graphType == "Box-Whisker") {
         if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
-          boxplot(portal$main[[input$boxVariableOptions1]], portal$main[[input$boxVariableOptions2]])
+          boxplot(salmonData[[input$boxVariableOptions1]], salmonData[[input$boxVariableOptions2]])
         } else {
           # Have them select one numeric and one factor variable
         }
       }
-      
     }
   })
   
