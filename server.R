@@ -21,6 +21,7 @@ library(dplyr)
 
 occupancyData <- read_tsv("Occupancy_Data.txt")
 locationData <- read_tsv("Location_Data.txt")
+salmonData <- read_tsv("salmon.txt")
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
 # LOOK INTO THE "updateSelectInput(session ...) function maybe 
