@@ -47,10 +47,9 @@ graphColors <- list()
 # set the specific color values for each dataset
   # the key needs to be whatever will be in input$selectData
   # the value needs to be a string color name
-graphColors["Portal"] <- "darkseagreen2"
+graphColors["Portal"] <- "mintcream"
 graphColors["Salmon Trends"] <- "salmon"
-graphColors["Abalone Age Prediction"] <- "lightblue"
-
+graphColors["Abalone Age Prediction"] <- "firebrick4"
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
 
@@ -134,8 +133,9 @@ shinyServer(function(input, output) {
       # use ggplot hist instead of just hist
       if (input$graphType == "Histogram" ) {
         if (length(input$histogramVariableOptions) == 1) {
-          hist(nameToData[[input$selectData]][[input$histogramVariableOptions]], col = graphColors[[input$selectData]], main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+          #hist(nameToData[[input$selectData]][[input$histogramVariableOptions]], col = "lightblue" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
           #hist(portal$main[[input$histogramVariableOptions]], col = "slategray" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+          ggplot(nameToData[[input$selectData]], aes_string(input$histogramVariableOptions)) + geom_histogram(col="wheat") + xlab(input$histogramVariableOptions)
         } else {
           # have them select one variable from the list
         }
@@ -160,5 +160,6 @@ shinyServer(function(input, output) {
       }
     }
   })
+  
 }
 )
