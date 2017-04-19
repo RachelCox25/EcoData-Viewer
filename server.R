@@ -28,18 +28,18 @@ shinyServer(function(input, output) {
   
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded
   output$ui <- renderUI({
-    if(input$selectData != "Bird Survey"){
+    if(input$selectData == "Portal"){
       switch(input$graphType,
              "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", 
-                                              label = "Select a numeric variable to graph",
+                                              label = "Select ONE numeric variable to graph",
                                               choices = c(10, 344, 567)
              ),
              "Scatter Plot" = checkboxGroupInput(inputId = "scatplotVariableOptions", 
-                                                 label = "Select two numeric variables to graph",
+                                                 label = "Select TWO numeric variables to graph",
                                                  choices = c(10, 344, 567)
              ),
              "Box-Whisker" = checkboxGroupInput(inputId = "boxVariableOptions1", 
-                                                label = "Select one numeric variable to graph", 
+                                                label = "Select ONE numeric variable to graph", 
                                                 choices = c(10, 344, 567)
              )
       )
@@ -49,7 +49,7 @@ shinyServer(function(input, output) {
   #Have to have a second render UI to have a second set of check boxes
   output$ui2 <- renderUI({
     if(input$selectData != "Bird Survey" && input$graphType == "Box-Whisker"){
-      checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select one factor variable to graph", choices = c("factor1", "factor2", "factor3"))
+      checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = c("factor1", "factor2", "factor3"))
     }
   })
   
