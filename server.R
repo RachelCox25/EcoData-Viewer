@@ -1,6 +1,7 @@
 #QUESTIONS TO ASK
-# 1. Can character classes be used like a factor? (i.e. in the box-whisker plots)
-# 2. Is there a ggplot for scatterplot?
+# 1. Can character classes be used like a factor? (i.e. in the box-whisker plots) USE read.table instead of read.tsv
+#    data <- read.table(filePath, sep="\t", header=TRUE, row.names=NULL, check.names=FALSE)
+# 2. Is there a ggplot for box plot? Yes: geom_box
 # 3. ggplot wasn't working for variable names for graphing (i.e. choice1 and choice2 instead of yr and dy)
 
 
@@ -18,11 +19,8 @@ library(readr)
 library(ggplot2)
 library(dplyr)
 
-#load dataset options, this isn't working
-#birdSurvey = rdataretriever::fetch('breed-bird-survey') #from Coyle et. al.
-
-#load datasets from ggplot2 assignment that uses dataset from EcoData retreiver
-
+# Make a dictionary to match selection names to the actual data
+nameToData <- new.env()
 
 occupancyData <- read_tsv("Occupancy_Data.txt")
 locationData <- read_tsv("Location_Data.txt")
@@ -30,8 +28,31 @@ salmonData <- read_tsv("salmon.txt")
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
 abalone <- rdataretriever::fetch("abalone-age")
+
+# Set the data values to the readable parts of the data
+  # the key needs to be whatever will be in input$selectData
+  # the value needs to be a dataframe that contains the data you want to use
 abalone <- abalone$abalone_age_data
-# LOOK INTO THE "updateSelectInput(session ...) function maybe 
+portal <- portal$main
+
+# Add the values to the nameToData data holder
+nameToData$"Portal" <- portal
+nameToData$"Salmon Trends" <- salmonData
+nameToData$"Abalone Age Prediction" <- abalone
+# an exampe of accessing this data type at the abalone data:
+#   nameToData[["Abalone Age Prediction]]
+
+# Make a list to hold the specific color values we want to use on our graphs
+graphColors <- list()
+# set the specific color values for each dataset
+  # the key needs to be whatever will be in input$selectData
+  # the value needs to be a string color name
+graphColors["Portal"] <- "mintcream"
+graphColors["Salmon Trends"] <- "salmon"
+graphColors["Abalone Age Prediction"] <- "firebrick4"
+# an exampe of accessing this data type at the abalone data:
+#   nameToData[["Abalone Age Prediction]]
+
 
 shinyServer(function(input, output) {
   
@@ -42,42 +63,15 @@ shinyServer(function(input, output) {
       numerics <- c()
       count <- 1
       
-      if(input$selectData == "Portal"){
-        colNamesList <- colnames(portal$main)
-        
-        for (variable in lapply(portal$main, class)) {
-         # find out which variable type it is
-          if (variable == "integer" || variable == "numeric") {
-            # add it to the numerics list
-            numerics <- c(numerics, colNamesList[count])
-          }
-        count <- count + 1
-        }
-      
-      }else if(input$selectData == "Salmon Trends"){
-        colNamesList <- colnames(salmonData)
-        
-        for (variable in lapply(salmonData, class)) {
-          # find out which variable type it is
-          if (variable == "integer") {
-            # add it to the numerics list
-            numerics <- c(numerics, colNamesList[count])
-          }
-          count <- count + 1
-        }
-      } else if (input$selectData == "Abalone Age Prediction") {
-        colNamesList <- colnames(abalone)
-        
-        for (variable in lapply(abalone, class)) {
-          # find out which variable type it is
-          if (variable == "integer" || variable == "numeric") {
-            # add it to the numerics list
-            numerics <- c(numerics, colNamesList[count])
-          }
-          count <- count + 1
-        }
-      }
-      
+      colNamesList <- colnames(nameToData[[input$selectData]])
+      for (variable in lapply(nameToData[[input$selectData]], class)) {
+        # find out which variable type it is
+         if (variable == "integer" || variable == "numeric") {
+           # add it to the numerics list
+           numerics <- c(numerics, colNamesList[count])
+         }
+       count <- count + 1
+       }
       
       switch(input$graphType,
              "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", 
@@ -106,37 +100,14 @@ shinyServer(function(input, output) {
       factors <- c()
       count <- 1
       
-      if(input$selectData == "Portal"){
-        colNamesList <- colnames(portal$main)
-        for (variable in lapply(portal$main, class)) {
-          # find out which variable type it is
-          if (variable == "factor") {
-            # add it to the factor list
-            factors <- c(factors, colNamesList[count]) 
-          }
-          count <- count + 1
+      colNamesList <- colnames(nameToData[[input$selectData]])
+      for (variable in lapply(nameToData[[input$selectData]], class)) {
+        # find out which variable type it is
+        if (variable == "factor") {
+          # add it to the numerics list
+          factors <- c(factors, colNamesList[count])
         }
-        
-      }else if(input$selectData == "Salmon Trends"){
-        colNamesList <- colnames(salmonData)
-        for (variable in lapply(salmonData, class)) {
-          # find out which variable type it is
-          if (variable == "factor") {
-            # add it to the factor list
-            factors <- c(factors, colNamesList[count]) 
-          }
-          count <- count + 1
-        }
-      } else if(input$selectData == "Abalone Age Prediction") {
-        colNamesList <- colnames(abalone)
-        for (variable in lapply(abalone, class)) {
-          # find out which variable type it is
-          if (variable == "factor") {
-            # add it to the factor list
-            factors <- c(factors, colNamesList[count]) 
-          }
-          count <- count + 1
-        }
+        count <- count + 1
       }
       
       checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = factors, selected=factors[1])
@@ -152,45 +123,18 @@ shinyServer(function(input, output) {
         
       }else if(input$graphType == "Scatter Plot"){
         ggplot(locationData, aes(NumSpecies,NDVI)) + geom_point(aes(colour = factor(PredominantSpeciesType), size = Elevation)) + xlab("Total Number of Species")
-      
       }
    
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded 
       #portal dataset graphing stuff
-    }else if(input$selectData == "Portal"){
-      
-        if (input$graphType == "Histogram" ) {
-          if (length(input$histogramVariableOptions) == 1) {
-            hist(portal$main[[input$histogramVariableOptions]], col = "slategray" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
-          } else {
-            # have them select one variable from the list
-          }
-          
-        } else if (input$graphType == "Scatter Plot") {
-          # run ggplot on portal$main, with aes set to the variable names defined in their selected choices
-          # ggplot(portal$main, aes(Choice1,Choice2)) <---- still not sure how to get these choices 
-          if (length(input$scatplotVariableOptions) == 2) {
-            choice1 <- input$scatplotVariableOptions[1]
-            choice2 <- input$scatplotVariableOptions[2]
-            #ggplot(portal$main, aes(choice1,choice2)) + geom_point(shape=1)
-            plot(portal$main[[choice1]], portal$main[[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
-          } else {
-            # have them select two variables from the list
-          }
-          
-        } else if (input$graphType == "Box-Whisker") {
-          if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
-            boxplot(portal$main[[input$boxVariableOptions1]], portal$main[[input$boxVariableOptions2]])
-          } else {
-            # Have them select one numeric and one factor variable
-          }
-        }
-      
-      #Salmon trends graphing stuff
-    }else if(input$selectData == "Salmon Trends"){
+    }
+    
+    else {
+      # use ggplot hist instead of just hist
       if (input$graphType == "Histogram" ) {
         if (length(input$histogramVariableOptions) == 1) {
-          hist(salmonData[[input$histogramVariableOptions]], col = "salmon" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+          hist(nameToData[[input$selectData]][[input$histogramVariableOptions]], col = "lightblue" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+          #hist(portal$main[[input$histogramVariableOptions]], col = "slategray" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
         } else {
           # have them select one variable from the list
         }
@@ -202,43 +146,14 @@ shinyServer(function(input, output) {
           choice1 <- input$scatplotVariableOptions[1]
           choice2 <- input$scatplotVariableOptions[2]
           #ggplot(portal$main, aes(choice1,choice2)) + geom_point(shape=1)
-          plot(salmonData[[choice1]], salmonData[[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
-        } else {
-          # have them select two variables from the list
-        }
-        
-        #this won't work right now because no factor variables
-      } else if (input$graphType == "Box-Whisker") {
-        if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
-          boxplot(salmonData[[input$boxVariableOptions1]], salmonData[[input$boxVariableOptions2]])
-        } else {
-          # Have them select one numeric and one factor variable
-        }
-      }
-      # Abalone Age Predictions Stuff
-    } else if(input$selectData == "Abalone Age Prediction") {
-      if (input$graphType == "Histogram" ) {
-        if (length(input$histogramVariableOptions) == 1) {
-          hist(abalone[[input$histogramVariableOptions]], col = "lightblue" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
-        } else {
-          # have them select one variable from the list
-        }
-        
-      } else if (input$graphType == "Scatter Plot") {
-        # run ggplot on portal$main, with aes set to the variable names defined in their selected choices
-        # ggplot(portal$main, aes(Choice1,Choice2)) <---- still not sure how to get these choices 
-        if (length(input$scatplotVariableOptions) == 2) {
-          choice1 <- input$scatplotVariableOptions[1]
-          choice2 <- input$scatplotVariableOptions[2]
-          #ggplot(portal$main, aes(choice1,choice2)) + geom_point(shape=1)
-          plot(abalone[[choice1]], abalone[[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
+          plot(nameToData[[input$selectData]][[choice1]], nameToData[[input$selectData]][[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
         } else {
           # have them select two variables from the list
         }
         
       } else if (input$graphType == "Box-Whisker") {
         if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
-          boxplot(abalone[[input$boxVariableOptions1]], abalone[[input$boxVariableOptions2]])
+          boxplot(nameToData[[input$selectData]][[input$boxVariableOptions1]], nameToData[[input$selectData]][[input$boxVariableOptions2]])
         } else {
           # Have them select one numeric and one factor variable
         }
