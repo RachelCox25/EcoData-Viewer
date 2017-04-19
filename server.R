@@ -21,17 +21,16 @@ library(dplyr)
 
 occupancyData <- read_tsv("Occupancy_Data.txt")
 locationData <- read_tsv("Location_Data.txt")
+# Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
-#portal <- rdataretriever::fetch("portal")
+
 
 shinyServer(function(input, output) {
   
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded
   output$ui <- renderUI({
     if(input$selectData == "Portal"){
-      # First fetch the dataset
-      
-      # Now, just for easier coding later, get the list of numerics and factors from portal
+      # Get the list of numerics and factors from portal
       numerics <- c()
       factors <- c()
       
