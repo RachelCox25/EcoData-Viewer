@@ -30,6 +30,7 @@ salmonData <- read_tsv("salmon.txt")
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
 abalone <- rdataretriever::fetch("abalone-age")
+abalone <- abalone$abalone_age_data
 # LOOK INTO THE "updateSelectInput(session ...) function maybe 
 
 shinyServer(function(input, output) {
@@ -65,9 +66,9 @@ shinyServer(function(input, output) {
           count <- count + 1
         }
       } else if (input$selectData == "Abalone Age Prediction") {
-        colNamesList <- colnames(abalone$abalone_age_data)
+        colNamesList <- colnames(abalone)
         
-        for (variable in lapply(abalone$abalone_age_data, class)) {
+        for (variable in lapply(abalone, class)) {
           # find out which variable type it is
           if (variable == "integer" || variable == "numeric") {
             # add it to the numerics list
@@ -95,7 +96,6 @@ shinyServer(function(input, output) {
                                                 selected = numerics[1]
              )
       )
-    
     }
   })
   
@@ -120,6 +120,16 @@ shinyServer(function(input, output) {
       }else if(input$selectData == "Salmon Trends"){
         colNamesList <- colnames(salmonData)
         for (variable in lapply(salmonData, class)) {
+          # find out which variable type it is
+          if (variable == "factor") {
+            # add it to the factor list
+            factors <- c(factors, colNamesList[count]) 
+          }
+          count <- count + 1
+        }
+      } else if(input$selectData == "Abalone Age Prediction") {
+        colNamesList <- colnames(abalone)
+        for (variable in lapply(abalone, class)) {
           # find out which variable type it is
           if (variable == "factor") {
             # add it to the factor list
@@ -201,6 +211,34 @@ shinyServer(function(input, output) {
       } else if (input$graphType == "Box-Whisker") {
         if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
           boxplot(salmonData[[input$boxVariableOptions1]], salmonData[[input$boxVariableOptions2]])
+        } else {
+          # Have them select one numeric and one factor variable
+        }
+      }
+      # Abalone Age Predictions Stuff
+    } else if(input$selectData == "Abalone Age Prediction") {
+      if (input$graphType == "Histogram" ) {
+        if (length(input$histogramVariableOptions) == 1) {
+          hist(abalone[[input$histogramVariableOptions]], col = "lightblue" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
+        } else {
+          # have them select one variable from the list
+        }
+        
+      } else if (input$graphType == "Scatter Plot") {
+        # run ggplot on portal$main, with aes set to the variable names defined in their selected choices
+        # ggplot(portal$main, aes(Choice1,Choice2)) <---- still not sure how to get these choices 
+        if (length(input$scatplotVariableOptions) == 2) {
+          choice1 <- input$scatplotVariableOptions[1]
+          choice2 <- input$scatplotVariableOptions[2]
+          #ggplot(portal$main, aes(choice1,choice2)) + geom_point(shape=1)
+          plot(abalone[[choice1]], abalone[[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
+        } else {
+          # have them select two variables from the list
+        }
+        
+      } else if (input$graphType == "Box-Whisker") {
+        if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
+          boxplot(abalone[[input$boxVariableOptions1]], abalone[[input$boxVariableOptions2]])
         } else {
           # Have them select one numeric and one factor variable
         }
