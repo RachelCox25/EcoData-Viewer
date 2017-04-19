@@ -146,8 +146,7 @@ shinyServer(function(input, output) {
         if (length(input$scatplotVariableOptions) == 2) {
           choice1 <- input$scatplotVariableOptions[1]
           choice2 <- input$scatplotVariableOptions[2]
-          #ggplot(portal$main, aes(choice1,choice2)) + geom_point(shape=1)
-          plot(nameToData[[input$selectData]][[choice1]], nameToData[[input$selectData]][[choice2]], main = "Your Variable Scatterplot", ylab=choice2, xlab=choice1)
+          ggplot(nameToData[[input$selectData]], aes_string(choice1,choice2)) + geom_point()
         } else {
           # have them select two variables from the list
         }
