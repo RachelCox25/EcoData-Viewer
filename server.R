@@ -26,23 +26,6 @@ locationData <- read_tsv("Location_Data.txt")
 
 shinyServer(function(input, output) {
   
-  #IF THE DATA INPUT IS BIRD SURVEY, THE GRAPH OUTPUT IS DIFFERENT aka this is hard coded
-  #This can be thought of as a function, needs to get called somewhere
-  birdSurveySelected <- reactive({
-    if(input$selectData == "Bird Survey"){
-      output$graph <- renderPlot({
-        
-        if(input$graphType == "Histogram"){
-          ggplot(locationData, aes(PredominantSpeciesType)) + geom_bar(fill=c("red", "blue")) + xlab("Predominant Species Type: Core or Transient") + ylab("Species Type Count")
-          
-        }else if(input$graphType == "Scatter Plot"){
-          ggplot(locationData, aes(NumSpecies,NDVI)) + geom_point(aes(colour = factor(PredominantSpeciesType), size = Elevation)) + xlab("Total Number of Species")
-        }
-        
-      })}
-  })
-  
-  
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded
   output$ui <- renderUI({
     if(input$selectData != "Bird Survey"){
@@ -61,13 +44,22 @@ shinyServer(function(input, output) {
     }
   })
   
+  #IF THE DATA INPUT IS BIRD SURVEY, THE GRAPH OUTPUT IS DIFFERENT aka this is hard coded
   output$graph <- renderPlot({
     
-    birdSurveySelected()
-    
-    #just get a graph to show up
-    hist(AirPassengers)
-    
+    if(input$selectData == "Bird Survey"){
+      if(input$graphType == "Histogram"){
+        ggplot(locationData, aes(PredominantSpeciesType)) + geom_bar(fill=c("red", "blue")) + xlab("Predominant Species Type: Core or Transient") + ylab("Species Type Count")
+        
+      }else if(input$graphType == "Scatter Plot"){
+        ggplot(locationData, aes(NumSpecies,NDVI)) + geom_point(aes(colour = factor(PredominantSpeciesType), size = Elevation)) + xlab("Total Number of Species")
+      }
+   
+  #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded   
+    }else{
+      #just get a different graph to show up if not bird survey
+      hist(AirPassengers)
+    }
   })
   
   
