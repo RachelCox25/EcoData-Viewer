@@ -23,7 +23,6 @@ occupancyData <- read_tsv("Occupancy_Data.txt")
 locationData <- read_tsv("Location_Data.txt")
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
-factors <- c() # factors needs to be accessed outside both loops
 # LOOK INTO THE "updateSelectInput(session ...) function maybe 
 
 shinyServer(function(input, output) {
@@ -40,9 +39,6 @@ shinyServer(function(input, output) {
         if (variable == "integer") {
           # add it to the numerics list
           numerics <- c(numerics, colNamesList[count])
-        } else if (variable == "factor") {
-          # add it to the factor list
-          factors <- c(factors, colNamesList[count]) 
         }
         count <- count + 1
       }
@@ -66,6 +62,17 @@ shinyServer(function(input, output) {
   
   #Have to have a second render UI to have a second set of check boxes
   output$ui2 <- renderUI({
+    factors <- c()
+    count <- 1
+    colNamesList <- colnames(portal$main)
+    for (variable in lapply(portal$main, class)) {
+      # find out which variable type it is
+      if (variable == "factor") {
+        # add it to the factor list
+        factors <- c(factors, colNamesList[count]) 
+      }
+      count <- count + 1
+    }
     if(input$selectData != "Bird Survey" && input$graphType == "Box-Whisker"){
       checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = factors)
     }
