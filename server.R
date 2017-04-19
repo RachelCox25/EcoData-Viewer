@@ -30,17 +30,29 @@ shinyServer(function(input, output) {
   output$ui <- renderUI({
     if(input$selectData != "Bird Survey"){
       
-      switch(input$graphType,
-             "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", label = "Select a variable to graph",
-                                              choices = c(10, 344, 567)
-             ),
-             "Scatter Plot" = checkboxGroupInput(inputId = "scatplotVariableOptions", label = "Select two variables to graph",
-                                                 choices = c(10, 344, 567)
-             ),
-             "Box-Whisker" = checkboxGroupInput(inputId = "boxVariableOptions1", label = "Select one below",
-                                                choices = c(10, 344, 567)
-             )
-      )
+      if(input$graphType == "Histogram"){
+        checkboxGroupInput(inputId = "histogramVariableOptions", label = "Select a numeric variable to graph", choices = c(10, 344, 567))
+      
+      }else if(input$graphType == "Scatter Plot"){
+        checkboxGroupInput(inputId = "scatplotVariableOptions", label = "Select two numeric variables to graph", choices = c(10, 344, 567))
+      
+      }else if(input$graphType == "Box-Whisker"){
+        checkboxGroupInput(inputId = "boxVariableOptions1", label = "Select one numeric variable to graph", choices = c(10, 344, 567))
+        checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select one factor variable to graph", choices = c("factor1", "factor2", "factor3"))
+      }
+      
+      # switch(input$graphType,
+      #        "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", label = "Select a numeric variable to graph",
+      #                                         choices = c(10, 344, 567)
+      #        ),
+      #        "Scatter Plot" = checkboxGroupInput(inputId = "scatplotVariableOptions", label = "Select two numeric variables to graph",
+      #                                            choices = c(10, 344, 567)
+      #        ),
+      #        "Box-Whisker" = (checkboxGroupInput(inputId = "boxVariableOptions1", label = "Select one numeric variable to graph",
+      #                                           choices = c(10, 344, 567)
+      #        ) checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select one factor variable to graph", choices = c("factor1", "factor2"))) 
+      #        
+      # )
     }
   })
   
