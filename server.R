@@ -30,19 +30,36 @@ shinyServer(function(input, output) {
   
   #IF THE DATA INPUT IS NOT BIRD SURVEY, GRAPH OUTPUT IS DYNAMIC WITH DYNAMIC UI aka this is not hard coded
   output$ui <- renderUI({
-    if(input$selectData == "Portal"){
+    if(input$selectData != "Bird Survey"){
       # Establish the list of numerics and factors from the dataset
       numerics <- c()
       count <- 1
-      colNamesList <- colnames(portal$main)
-      for (variable in lapply(portal$main, class)) {
-        # find out which variable type it is
-        if (variable == "integer") {
-          # add it to the numerics list
-          numerics <- c(numerics, colNamesList[count])
-        }
+      
+      if(input$selectData == "Portal"){
+        colNamesList <- colnames(portal$main)
+        
+        for (variable in lapply(portal$main, class)) {
+         # find out which variable type it is
+          if (variable == "integer") {
+            # add it to the numerics list
+            numerics <- c(numerics, colNamesList[count])
+          }
         count <- count + 1
+        }
+      
+      }else if(input$selectData == "Salmon Trends"){
+        colNamesList <- colnames(salmonData)
+        
+        for (variable in lapply(salmonData, class)) {
+          # find out which variable type it is
+          if (variable == "integer") {
+            # add it to the numerics list
+            numerics <- c(numerics, colNamesList[count])
+          }
+          count <- count + 1
+        }
       }
+      
       
       switch(input$graphType,
              "Histogram" = checkboxGroupInput(inputId = "histogramVariableOptions", 
@@ -61,23 +78,40 @@ shinyServer(function(input, output) {
                                                 selected = numerics[1]
              )
       )
+    
     }
   })
   
   #Have to have a second render UI to have a second set of check boxes
   output$ui2 <- renderUI({
-    factors <- c()
-    count <- 1
-    colNamesList <- colnames(portal$main)
-    for (variable in lapply(portal$main, class)) {
-      # find out which variable type it is
-      if (variable == "factor") {
-        # add it to the factor list
-        factors <- c(factors, colNamesList[count]) 
-      }
-      count <- count + 1
-    }
+    
     if(input$selectData != "Bird Survey" && input$graphType == "Box-Whisker"){
+      factors <- c()
+      count <- 1
+      
+      if(input$selectData == "Portal"){
+        colNamesList <- colnames(portal$main)
+        for (variable in lapply(portal$main, class)) {
+          # find out which variable type it is
+          if (variable == "factor") {
+            # add it to the factor list
+            factors <- c(factors, colNamesList[count]) 
+          }
+          count <- count + 1
+        }
+        
+      }else if(input$selectData == "Salmon Trends"){
+        colNamesList <- colnames(salmonData)
+        for (variable in lapply(salmonData, class)) {
+          # find out which variable type it is
+          if (variable == "factor") {
+            # add it to the factor list
+            factors <- c(factors, colNamesList[count]) 
+          }
+          count <- count + 1
+        }
+      }
+      
       checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = factors, selected=factors[1])
     }
   })

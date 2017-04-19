@@ -18,7 +18,7 @@ shinyUI(fluidPage(
 
       selectInput(inputId = "selectData",
                   label="Choose the dataset to graph",
-                  choices = c("Bird Survey", "Portal")
+                  choices = c("Bird Survey", "Portal", "Salmon Trends")
                   ),
 
       radioButtons(inputId = "graphType",
