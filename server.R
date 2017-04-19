@@ -24,6 +24,7 @@ locationData <- read_tsv("Location_Data.txt")
 salmonData <- read_tsv("salmon.txt")
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
+abalone <- rdataretriever::fetch("abalone-age")
 # LOOK INTO THE "updateSelectInput(session ...) function maybe 
 
 shinyServer(function(input, output) {
@@ -40,7 +41,7 @@ shinyServer(function(input, output) {
         
         for (variable in lapply(portal$main, class)) {
          # find out which variable type it is
-          if (variable == "integer") {
+          if (variable == "integer" || variable == "numeric") {
             # add it to the numerics list
             numerics <- c(numerics, colNamesList[count])
           }
@@ -53,6 +54,17 @@ shinyServer(function(input, output) {
         for (variable in lapply(salmonData, class)) {
           # find out which variable type it is
           if (variable == "integer") {
+            # add it to the numerics list
+            numerics <- c(numerics, colNamesList[count])
+          }
+          count <- count + 1
+        }
+      } else if (input$selectData == "Abalone Age Prediction") {
+        colNamesList <- colnames(abalone$abalone_age_data)
+        
+        for (variable in lapply(abalone$abalone_age_data, class)) {
+          # find out which variable type it is
+          if (variable == "integer" || variable == "numeric") {
             # add it to the numerics list
             numerics <- c(numerics, colNamesList[count])
           }
