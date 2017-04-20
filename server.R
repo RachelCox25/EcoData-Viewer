@@ -101,7 +101,7 @@ shinyServer(function(input, output) {
   #Have to have a second render UI to have a second set of check boxes
   output$ui2 <- renderUI({
     
-    if(input$selectData != "Bird Survey" && input$graphType == "Box-Whisker"){
+    if(input$selectData != "Bird Survey" && input$graphType == "Box-Whisker" || input$graphType == "Scatter Plot"){
       factors <- c()
       count <- 1
       
@@ -115,7 +115,11 @@ shinyServer(function(input, output) {
         count <- count + 1
       }
       
-      checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = factors, selected=factors[1])
+      if(input$graphType == "Box-Whisker"){
+        checkboxGroupInput(inputId = "boxVariableOptions2", label = "Select ONE factor variable to graph", choices = factors, selected=factors[1])
+      }else{
+        checkboxGroupInput(inputId = "boxVariableOptions2", label = "Optional: Select ONE factor variable to graph", choices = factors)
+      }
     }
   })
   
@@ -144,19 +148,27 @@ shinyServer(function(input, output) {
       } else if (input$graphType == "Scatter Plot") {
         # run ggplot on portal$main, with aes set to the variable names defined in their selected choices
         # ggplot(portal$main, aes(Choice1,Choice2)) <---- still not sure how to get these choices 
-        if (length(input$scatplotVariableOptions) == 2) {
+        if ((length(input$scatplotVariableOptions) == 2) && (length(input$boxVariableOptions2) != 1)) {
           choice1 <- input$scatplotVariableOptions[1]
           choice2 <- input$scatplotVariableOptions[2]
 
           ggplot(nameToData[[input$selectData]], aes_string(choice1,choice2)) + geom_point(colour = graphColors[[input$selectData]]) + xlab(choice1) + ylab(choice2)
 
-        } else {
+        } else if(length(input$boxVariableOptions2) == 1){
+          choice1 <- input$scatplotVariableOptions[1]
+          choice2 <- input$scatplotVariableOptions[2]
+          
+          ggplot(nameToData[[input$selectData]], aes_string(choice1,choice2)) + geom_point(colour = factor(input$boxVariableOptions2)) + xlab(choice1) + ylab(choice2)
+          
+        }else {
           # have them select two variables from the list
         }
         
       } else if (input$graphType == "Box-Whisker") {
         if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
-          boxplot(nameToData[[input$selectData]][[input$boxVariableOptions1]], nameToData[[input$selectData]][[input$boxVariableOptions2]])
+          ggplot(nameToData[[input$selectData]], aes_string(input$boxVariableOptions1, input$boxVariableOptions2)) + geom_boxplot(fill=graphColors[[input$selectData]])
+          
+          #boxplot(nameToData[[input$selectData]][[input$boxVariableOptions1]], nameToData[[input$selectData]][[input$boxVariableOptions2]])
         } else {
           # Have them select one numeric and one factor variable
         }
