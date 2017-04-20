@@ -29,7 +29,8 @@ nameToData <- new.env()
 
 occupancyData <- read_tsv("Occupancy_Data.txt")
 locationData <- read_tsv("Location_Data.txt")
-salmonData <- read_tsv("salmon.txt")
+#salmonData <- read_tsv("salmon.txt")
+salmonData <- read.table("salmon.txt", sep="\t", header=TRUE, row.names=NULL, check.names=FALSE)
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
 abalone <- rdataretriever::fetch("abalone-age")
@@ -166,7 +167,7 @@ shinyServer(function(input, output) {
         
       } else if (input$graphType == "Box-Whisker") {
         if (length(input$boxVariableOptions1) == 1 && length(input$boxVariableOptions2) == 1) {
-          ggplot(nameToData[[input$selectData]], aes_string(input$boxVariableOptions1, input$boxVariableOptions2)) + geom_boxplot(fill=graphColors[[input$selectData]])
+          ggplot(nameToData[[input$selectData]], aes_string(input$boxVariableOptions2, input$boxVariableOptions1)) + geom_boxplot(fill=graphColors[[input$selectData]]) #+ coord_cartesian(ylim = c(0, 100))
           
           #boxplot(nameToData[[input$selectData]][[input$boxVariableOptions1]], nameToData[[input$selectData]][[input$boxVariableOptions2]])
         } else {
