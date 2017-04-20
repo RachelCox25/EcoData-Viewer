@@ -34,17 +34,20 @@ salmonData <- read.table("salmon.txt", sep="\t", header=TRUE, row.names=NULL, ch
 # Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
 abalone <- rdataretriever::fetch("abalone-age")
+fishParasite <- rdataretriever::fetch("fish-parasite-hosts")
 
 # Set the data values to the readable parts of the data
   # the key needs to be whatever will be in input$selectData
   # the value needs to be a dataframe that contains the data you want to use
 abalone <- abalone$abalone_age_data
 portal <- portal$main
+fishParasite <- fishParasite$fish_parasite_hosts_host_characteristics
 
 # Add the values to the nameToData data holder
 nameToData$"Portal" <- portal
 nameToData$"Salmon Trends" <- salmonData
 nameToData$"Abalone Age Prediction" <- abalone
+nameToData$"Fish Parasite Records" <- fishParasite
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
 
@@ -56,6 +59,7 @@ graphColors <- list()
 graphColors["Portal"] <- "darkseagreen2"
 graphColors["Salmon Trends"] <- "salmon"
 graphColors["Abalone Age Prediction"] <- "lightblue"
+graphColors["Fish Parasite Records"] <- "indianred1"
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
 
