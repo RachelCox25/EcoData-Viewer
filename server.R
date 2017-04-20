@@ -41,13 +41,13 @@ fishParasite <- rdataretriever::fetch("fish-parasite-hosts")
   # the value needs to be a dataframe that contains the data you want to use
 abalone <- abalone$abalone_age_data
 portal <- portal$main
-fishParasite <- fishParasite$fish_parasite_hosts_host_characteristics
+#fishParasite <- fishParasite$fish_parasite_hosts_host_characteristics
 
 # Add the values to the nameToData data holder
 nameToData$"Portal" <- portal
 nameToData$"Salmon Trends" <- salmonData
 nameToData$"Abalone Age Prediction" <- abalone
-nameToData$"Fish Parasite Records" <- fishParasite
+#nameToData$"Fish Parasite Records" <- fishParasite
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
 
@@ -59,7 +59,7 @@ graphColors <- list()
 graphColors["Portal"] <- "darkseagreen2"
 graphColors["Salmon Trends"] <- "salmon"
 graphColors["Abalone Age Prediction"] <- "lightblue"
-graphColors["Fish Parasite Records"] <- "indianred1"
+#graphColors["Fish Parasite Records"] <- "indianred1"
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
 
@@ -145,7 +145,7 @@ shinyServer(function(input, output) {
       # use ggplot hist instead of just hist
       if (input$graphType == "Histogram" ) {
         if (length(input$histogramVariableOptions) == 1) {
-          ggplot(nameToData[[input$selectData]], aes_string(input$histogramVariableOptions)) + geom_histogram(col="mediumpurple", fill=graphColors[[input$selectData]]) + xlab(input$histogramVariableOptions) + ggtitle(paste("Histogram of", input$histogramVariableOptions))
+          ggplot(nameToData[[input$selectData]], aes_string(input$histogramVariableOptions)) + geom_histogram(col="gray28", fill=graphColors[[input$selectData]]) + xlab(input$histogramVariableOptions) + ggtitle(paste("Histogram of", input$histogramVariableOptions))
         } else {
           # have them select one variable from the list
         }
