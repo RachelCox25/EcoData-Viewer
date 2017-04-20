@@ -136,9 +136,7 @@ shinyServer(function(input, output) {
       # use ggplot hist instead of just hist
       if (input$graphType == "Histogram" ) {
         if (length(input$histogramVariableOptions) == 1) {
-          #hist(nameToData[[input$selectData]][[input$histogramVariableOptions]], col = "lightblue" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
-          #hist(portal$main[[input$histogramVariableOptions]], col = "slategray" , main=paste("Histogram of", input$histogramVariableOptions), xlab = input$histogramVariableOptions)
-          ggplot(nameToData[[input$selectData]], aes_string(input$histogramVariableOptions)) + geom_histogram(col="wheat") + xlab(input$histogramVariableOptions) + ggtitle(paste("Histogram of", input$histogramVariableOptions))
+          ggplot(nameToData[[input$selectData]], aes_string(input$histogramVariableOptions)) + geom_histogram(col="mediumpurple", fill=graphColors[[input$selectData]]) + xlab(input$histogramVariableOptions) + ggtitle(paste("Histogram of", input$histogramVariableOptions))
         } else {
           # have them select one variable from the list
         }
