@@ -163,7 +163,7 @@ shinyServer(function(input, output) {
           choice1 <- input$scatplotVariableOptions[1]
           choice2 <- input$scatplotVariableOptions[2]
           
-          ggplot(nameToData[[input$selectData]], aes_string(choice1,choice2)) + geom_point(colour = factor(input$boxVariableOptions2)) + xlab(choice1) + ylab(choice2)
+          ggplot(nameToData[[input$selectData]], aes_string(choice1,choice2)) + geom_point(aes_string(colour = input$boxVariableOptions2)) + xlab(choice1) + ylab(choice2)
           
         }else {
           # have them select two variables from the list
