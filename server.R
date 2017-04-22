@@ -1,20 +1,3 @@
-#QUESTIONS TO ASK
-# 1. Can character classes be used like a factor? (i.e. in the box-whisker plots) USE read.table instead of read.tsv
-#    data <- read.table(filePath, sep="\t", header=TRUE, row.names=NULL, check.names=FALSE)
-# 2. Is there a ggplot for box plot? Yes: geom_box
-# 3. ggplot wasn't working for variable names for graphing (i.e. choice1 and choice2 instead of yr and dy)
-
-
-# IDEAS FOR IMPROVEMENT
-#   - Have an option for the scatterplot graph for them to select with variable they want to differentiate the colors on
-#         ... So we would show a checkbox list of the factor values, (default to having nothing checked) and if they picked one, do: geom_point(aes(colour = factor(THE-VARIABLE-THEY-SELECTED)))
-        # ... if they don't pick one, then we stick with the main color value
-
-# This is the server logic for a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
 
 library(shiny)
 
