@@ -18,7 +18,7 @@ salmonData <- read.table("salmon.txt", sep="\t", header=TRUE, row.names=NULL, ch
 portal <- rdataretriever::fetch("portal")
 abalone <- rdataretriever::fetch("abalone-age")
 antarcticBirdData <- rdataretriever::fetch("antarctic-breed-bird")
-iris <- rdataretriever::fetch("iris")
+#iris <- rdataretriever::fetch("iris")
 
 # Set the data values to the readable parts of the data
   # the key needs to be whatever will be in input$selectData
@@ -26,14 +26,15 @@ iris <- rdataretriever::fetch("iris")
 abalone <- abalone$abalone_age_data
 portal <- portal$main
 antarcticBirdData <- antarcticBirdData$antarctic_breed_bird_species
-iris <- iris$Iris
+#iris <- iris$Iris
 
 # Add the values to the nameToData data holder
 nameToData$"Portal" <- portal
 nameToData$"Salmon Trends" <- salmonData
 nameToData$"Abalone Age Prediction" <- abalone
 nameToData$"Antarctic Bird Species" <- antarcticBirdData
-nameToData$"Iris" <- iris
+#nameToData$"Iris" <- iris
+
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
 
@@ -46,7 +47,8 @@ graphColors["Portal"] <- "darkseagreen2"
 graphColors["Salmon Trends"] <- "salmon"
 graphColors["Abalone Age Prediction"] <- "lightblue"
 graphColors["Antarctic Bird Species"] <- "cadetblue"
-graphColors["Iris"] <- "darkorchid"
+#graphColors["Iris"] <- "darkorchid"
+
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
 
