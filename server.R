@@ -10,30 +10,32 @@ library(dplyr)
 # Make a dictionary to match selection names to the actual data
 nameToData <- new.env()
 
+#Datasets included in the github 
 occupancyData <- read_tsv("Occupancy_Data.txt")
 locationData <- read_tsv("Location_Data.txt")
-#salmonData <- read_tsv("salmon.txt")
 salmonData <- read.table("salmon.txt", sep="\t", header=TRUE, row.names=NULL, check.names=FALSE)
-# Load this first, so that the app doesn't have to do it with every call.
+
+#Datasets from the EcoData Retriever
+#Load this first, so that the app doesn't have to do it with every call.
 portal <- rdataretriever::fetch("portal")
 abalone <- rdataretriever::fetch("abalone-age")
 antarcticBirdData <- rdataretriever::fetch("antarctic-breed-bird")
-#iris <- rdataretriever::fetch("iris")
+iris <- rdataretriever::fetch("iris")
 
 # Set the data values to the readable parts of the data
-  # the key needs to be whatever will be in input$selectData
-  # the value needs to be a dataframe that contains the data you want to use
+# the key needs to be whatever will be in input$selectData
+# the value needs to be a dataframe that contains the data you want to use
 abalone <- abalone$abalone_age_data
 portal <- portal$main
 antarcticBirdData <- antarcticBirdData$antarctic_breed_bird_species
-#iris <- iris$Iris
+iris <- iris$Iris
 
 # Add the values to the nameToData data holder
 nameToData$"Portal" <- portal
 nameToData$"Salmon Trends" <- salmonData
 nameToData$"Abalone Age Prediction" <- abalone
 nameToData$"Antarctic Bird Species" <- antarcticBirdData
-#nameToData$"Iris" <- iris
+nameToData$"Iris" <- iris
 
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
@@ -41,13 +43,13 @@ nameToData$"Antarctic Bird Species" <- antarcticBirdData
 # Make a list to hold the specific color values we want to use on our graphs
 graphColors <- list()
 # set the specific color values for each dataset
-  # the key needs to be whatever will be in input$selectData
-  # the value needs to be a string color name
+# the key needs to be whatever will be in input$selectData
+# the value needs to be a string color name
 graphColors["Portal"] <- "darkseagreen2"
 graphColors["Salmon Trends"] <- "salmon"
 graphColors["Abalone Age Prediction"] <- "lightblue"
 graphColors["Antarctic Bird Species"] <- "cadetblue"
-#graphColors["Iris"] <- "darkorchid"
+graphColors["Iris"] <- "darkorchid"
 
 # an exampe of accessing this data type at the abalone data:
 #   nameToData[["Abalone Age Prediction]]
