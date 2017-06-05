@@ -1,6 +1,3 @@
-# bio465capstone
-Capstone Project - EcoData Viewer
-
 First to use this product you will need R, RStudio, and the Data Retriever program
 
 To download R: https://cran.rstudio.com/ </br>
